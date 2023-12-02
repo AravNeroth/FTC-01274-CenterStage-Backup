@@ -20,10 +20,10 @@ public class Mecanum
 
     public Mecanum(HardwareMap hardwareMap)
     {
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        leftFront = hardwareMap.get(DcMotorEx.class, "frontLeftMotor");
+        leftRear = hardwareMap.get(DcMotorEx.class, "backLeftMotor");
+        rightFront = hardwareMap.get(DcMotorEx.class, "frontRightMotor");
+        rightRear = hardwareMap.get(DcMotorEx.class, "backRightMotor");
 
         leftRear.setDirection(DcMotorEx.Direction.REVERSE);
         leftFront.setDirection(DcMotorEx.Direction.REVERSE);
@@ -35,7 +35,9 @@ public class Mecanum
         imu.initialize(parameters);
     }
 
-    public void drive(Gamepad gamepad1)
+    public void
+
+    drive(Gamepad gamepad1)
     {
         y = gamepad1.left_stick_y;
         x = gamepad1.left_stick_x;
