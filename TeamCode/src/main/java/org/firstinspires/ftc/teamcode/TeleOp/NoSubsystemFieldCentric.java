@@ -45,10 +45,10 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (gamepad1.b) {
-                arm.setPower(0.2);
+                arm.setPower(.5);
             }
             if (gamepad1.x) {
-                arm.setPower(-0.2);
+                arm.setPower(-.5);
             }
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
