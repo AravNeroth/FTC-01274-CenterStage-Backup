@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="VeryBasicFieldCentric", group="DriveModes")
 public class NoSubsystemFieldCentric extends LinearOpMode {
@@ -18,8 +19,15 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
         DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
-
         DcMotor arm = hardwareMap.dcMotor.get("arm");
+        DcMotor intake = hardwareMap.dcMotor.get("intake");
+        Servo servo = hardwareMap.servo.get("servoMotor");
+
+        int armUpPosition = 300;
+        int armDownPosition = 50;
+
+        double position = arm.getCurrentPosition();
+        double desiredPosition = arm.getTargetPosition();
 
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -38,17 +46,36 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         waitForStart();
 
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
-            if (gamepad1.b) {
+            if(gamepad2.triangle) {
+                intake.setPower(-0.35);
+            }
+            if(gamepad2.cross) {
+                intake.setPower(0);
+            }
+            if (gamepad2.circle) {
+                arm.setTargetPosition(armUpPosition);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(.5);
             }
-            if (gamepad1.x) {
+            if (gamepad2.square) {
+                arm.setTargetPosition(armDownPosition);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(-.5);
+            }
+            if(gamepad2.dpad_up) {
+                servo.setPosition(1);
+            }
+            if(gamepad2.dpad_down) {
+                servo.setPosition(0);
             }
 
             double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
