@@ -20,15 +20,18 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
         DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
         DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
         DcMotor arm = hardwareMap.dcMotor.get("arm");
+        DcMotor arm2 = hardwareMap.dcMotor.get("arm2");
         DcMotor intake = hardwareMap.dcMotor.get("intake");
         Servo servo = hardwareMap.servo.get("servoMotor");
 
-        int armUpPosition = 300;
-        int armDownPosition = 50;
+        int armUpPosition = 315;
+        int armDownPosition = 30;
 
         double position = arm.getCurrentPosition();
         double desiredPosition = arm.getTargetPosition();
 
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Reverse the right side motors. This may be wrong for your setup.
@@ -46,8 +49,6 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
 
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 
@@ -55,22 +56,41 @@ public class NoSubsystemFieldCentric extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            // intake code
             if(gamepad2.triangle) {
+                arm.setTargetPosition(0);
+                arm2.setTargetPosition(0);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 intake.setPower(-0.35);
             }
             if(gamepad2.cross) {
+                arm.setTargetPosition(30);
+                arm2.setTargetPosition(30);
+                arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 intake.setPower(0);
             }
+
+            // arm code
             if (gamepad2.circle) {
                 arm.setTargetPosition(armUpPosition);
+                arm2.setTargetPosition(0);
                 arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 arm.setPower(.5);
+                arm2.setPower(.5);
             }
             if (gamepad2.square) {
                 arm.setTargetPosition(armDownPosition);
+                arm2.setTargetPosition(armDownPosition);
                 arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                arm.setPower(-.5);
+                arm2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                arm.setPower(.5);
+                arm2.setPower(.5);
             }
+
+            // wrist for scoring code
             if(gamepad2.dpad_up) {
                 servo.setPosition(1);
             }
